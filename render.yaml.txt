@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: smm-scheduler
+    env: python
+    buildCommand: pip install -r deployment_requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT main:app
+    envVars:
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: smm-scheduler-db
+          property: connectionString
+      - key: TIKTOK_CLIENT_KEY
+        sync: false
+      - key: TIKTOK_CLIENT_SECRET
+        sync: false
+      - key: TIKTOK_REDIRECT_URI
+        value: https://smm-scheduler.onrender.com/auth/tiktok/callback
+      - key: INSTAGRAM_APP_ID
+        sync: false
+      - key: INSTAGRAM_APP_SECRET
+        sync: false
+      - key: INSTAGRAM_REDIRECT_URI
+        value: https://smm-scheduler.onrender.com/auth/instagram/callback
+      - key: YOUTUBE_CLIENT_ID
+        sync: false
+      - key: YOUTUBE_CLIENT_SECRET
+        sync: false
+      - key: YOUTUBE_REDIRECT_URI
+        value: https://smm-scheduler.onrender.com/auth/youtube/callback
+      - key: YOUTUBE_API_KEY
+        sync: false
+
+databases:
+  - name: smm-scheduler-db
+    databaseName: smm_scheduler
+    user: smm_user
