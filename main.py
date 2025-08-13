@@ -31,7 +31,7 @@ def handle_posts():
             posts_data.append(post_data)
             
             return jsonify({'success': True, 'post_id': post_data['id']})
-return jsonify({'error': 'No data provided'}), 400
+        return jsonify({'error': 'No data provided'}), 400
 
 @app.route('/api/accounts', methods=['GET', 'POST'])
 def handle_accounts():
