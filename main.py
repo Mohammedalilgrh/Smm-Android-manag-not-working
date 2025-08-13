@@ -24,14 +24,12 @@ def handle_posts():
         return jsonify(posts_data)
     
     elif request.method == 'POST':
-        post_data = request.get_json()
-        if post_data:
-            post_data['id'] = len(posts_data) + 1
-            post_data['created_at'] = datetime.now().isoformat()
-            posts_data.append(post_data)
-            
-            return jsonify({'success': True, 'post_id': post_data['id']})
-        return jsonify({'error': 'No data provided'}), 400
+        post_data = request.json
+        post_data['id'] = len(posts_data) + 1
+        post_data['created_at'] = datetime.now().isoformat()
+        posts_data.append(post_data)
+        
+        return jsonify({'success': True, 'post_id': post_data['id']})
 
 @app.route('/api/accounts', methods=['GET', 'POST'])
 def handle_accounts():
@@ -41,23 +39,18 @@ def handle_accounts():
         return jsonify(connected_accounts)
     
     elif request.method == 'POST':
-        account_data = request.get_json()
-        if account_data:
-            platform = account_data.get('platform')
-            
-            if platform and platform not in connected_accounts:
-                connected_accounts.append(platform)
-            
-            return jsonify({'success': True, 'connected': connected_accounts})
-        return jsonify({'error': 'No data provided'}), 400
+        account_data = request.json
+        platform = account_data.get('platform')
+        
+        if platform not in connected_accounts:
+            connected_accounts.append(platform)
+        
+        return jsonify({'success': True, 'connected': connected_accounts})
 
 @app.route('/api/schedule', methods=['POST'])
 def schedule_post():
     """Handle scheduled post publishing"""
-    post_data = request.get_json()
-    
-    if not post_data:
-        return jsonify({'error': 'No data provided'}), 400
+    post_data = request.json
     
     # In a real app, this would integrate with actual social media APIs
     # For demo purposes, we'll just simulate the posting
