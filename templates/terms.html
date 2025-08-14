@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Terms of Service - SMM Agent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Terms of Service</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted"><em>Last updated: {{ "now"|strftime("%B %d, %Y") }}</em></p>
+                    
+                    <h5>1. Service Description</h5>
+                    <p>SMM Agent is a social media management tool that helps users schedule and automate posts across multiple social media platforms including Instagram, TikTok, and YouTube.</p>
+                    
+                    <h5>2. Account Registration</h5>
+                    <p>Users must provide accurate information when creating accounts. Users are responsible for maintaining the security of their account credentials.</p>
+                    
+                    <h5>3. Social Media Integration</h5>
+                    <p>Our service connects to social media platforms through official OAuth APIs. We do not store your social media passwords. You can revoke access at any time through your connected accounts settings.</p>
+                    
+                    <h5>4. Content Responsibility</h5>
+                    <p>Users are solely responsible for all content posted through our service. Content must comply with the terms of service of each respective social media platform.</p>
+                    
+                    <h5>5. Service Availability</h5>
+                    <p>We strive to maintain high availability but do not guarantee uninterrupted service. Scheduled posts may be delayed due to platform limitations or technical issues.</p>
+                    
+                    <h5>6. Data Usage</h5>
+                    <p>We collect minimal data necessary for service operation. See our Privacy Policy for detailed information about data handling.</p>
+                    
+                    <h5>7. Limitation of Liability</h5>
+                    <p>SMM Agent is provided "as is" without warranties. We are not liable for any damages resulting from use of our service.</p>
+                    
+                    <h5>8. Changes to Terms</h5>
+                    <p>We may update these terms at any time. Continued use of the service constitutes acceptance of updated terms.</p>
+                    
+                    <h5>9. Contact Information</h5>
+                    <p>For questions about these terms, please contact us through our support channels.</p>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
