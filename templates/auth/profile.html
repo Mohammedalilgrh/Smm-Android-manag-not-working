@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - SMM Agent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-cog text-primary me-2"></i>User Profile
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Profile Information -->
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-user me-2"></i>Account Information</h5>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Username</label>
+                                <div class="form-control-plaintext">{{ current_user.username }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Email</label>
+                                <div class="form-control-plaintext">{{ current_user.email }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Member Since</label>
+                                <div class="form-control-plaintext">
+                                    {{ current_user.created_at.strftime('%B %d, %Y') }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Statistics -->
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-chart-bar me-2"></i>Your Statistics</h5>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="card bg-primary bg-opacity-10 border-primary text-center p-3">
+                                        <h4 class="text-primary mb-1">{{ stats.connected_platforms }}</h4>
+                                        <small>Connected Platforms</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-success bg-opacity-10 border-success text-center p-3">
+                                        <h4 class="text-success mb-1">{{ stats.total_posts }}</h4>
+                                        <small>Total Posts</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-warning bg-opacity-10 border-warning text-center p-3">
+                                        <h4 class="text-warning mb-1">{{ stats.scheduled_posts }}</h4>
+                                        <small>Scheduled Posts</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="card bg-info bg-opacity-10 border-info text-center p-3">
+                                        <h4 class="text-info mb-1">{{ stats.platforms|length }}</h4>
+                                        <small>Active Accounts</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Connected Platforms -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-share-alt me-2"></i>Connected Platforms</h5>
+                </div>
+                <div class="card-body">
+                    {% if stats.platforms %}
+                        <div class="row">
+                            {% for platform in stats.platforms %}
+                            <div class="col-md-4 mb-3">
+                                <div class="card bg-success bg-opacity-10 border-success">
+                                    <div class="card-body text-center">
+                                        {% if platform == 'tiktok' %}
+                                            <i class="fab fa-tiktok fa-3x mb-2" style="color: #ff0050;"></i>
+                                            <h6>TikTok</h6>
+                                        {% elif platform == 'instagram' %}
+                                            <i class="fab fa-instagram fa-3x mb-2" style="color: #e4405f;"></i>
+                                            <h6>Instagram</h6>
+                                        {% elif platform == 'youtube' %}
+                                            <i class="fab fa-youtube fa-3x mb-2" style="color: #ff0000;"></i>
+                                            <h6>YouTube</h6>
+                                        {% endif %}
+                                        <small class="text-success">
+                                            <i class="fas fa-check-circle me-1"></i>Connected
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-unlink fa-3x text-muted mb-3"></i>
+                            <h6 class="text-muted">No platforms connected yet</h6>
+                            <p class="text-muted">Connect your social media accounts to start automating your posts</p>
+                            <a href="{{ url_for('social.manage_accounts') }}" class="btn btn-primary">
+                                <i class="fas fa-link me-2"></i>Connect Platforms
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="{{ url_for('main.schedule_post_route') }}" class="btn btn-primary w-100">
+                                <i class="fas fa-plus-circle me-2"></i>Schedule Post
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="{{ url_for('main.bulk_upload') }}" class="btn btn-success w-100">
+                                <i class="fas fa-upload me-2"></i>Bulk Upload
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="{{ url_for('social.manage_accounts') }}" class="btn btn-info w-100">
+                                <i class="fas fa-link me-2"></i>Manage Accounts
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="{{ url_for('main.posts') }}" class="btn btn-secondary w-100">
+                                <i class="fas fa-list me-2"></i>View Posts
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Account Settings -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Account Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Change Password</h6>
+                            <small class="text-muted">Update your account password for security</small>
+                        </div>
+                        <button class="btn btn-outline-warning" onclick="changePassword()">
+                            <i class="fas fa-key me-2"></i>Change
+                        </button>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Export Data</h6>
+                            <small class="text-muted">Download your posts and account data</small>
+                        </div>
+                        <button class="btn btn-outline-info" onclick="exportData()">
+                            <i class="fas fa-download me-2"></i>Export
+                        </button>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1 text-danger">Delete Account</h6>
+                            <small class="text-muted">Permanently delete your account and all data</small>
+                        </div>
+                        <button class="btn btn-outline-danger" onclick="deleteAccount()">
+                            <i class="fas fa-trash me-2"></i>Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function changePassword() {
+    // Simple implementation - in production, this would open a modal or redirect to a change password page
+    const newPassword = prompt('Enter new password (minimum 8 characters):');
+    const confirmPassword = prompt('Confirm new password:');
+    
+    if (newPassword && confirmPassword) {
+        if (newPassword !== confirmPassword) {
+            showAlert('Passwords do not match', 'danger');
+            return;
+        }
+        
+        if (newPassword.length < 8) {
+            showAlert('Password must be at least 8 characters long', 'danger');
+            return;
+        }
+        
+        // In production, this would be a proper API call
+        showAlert('Password change functionality would be implemented here', 'info');
+    }
+}
+
+function exportData() {
+    // In production, this would trigger a data export
+    showAlert('Data export functionality would be implemented here', 'info');
+}
+
+function deleteAccount() {
+    const confirmation = confirm('Are you sure you want to delete your account? This action cannot be undone.');
+    if (confirmation) {
+        const doubleConfirm = prompt('Type "DELETE" to confirm account deletion:');
+        if (doubleConfirm === 'DELETE') {
+            // In production, this would be a proper API call
+            showAlert('Account deletion functionality would be implemented here', 'warning');
+        }
+    }
+}
+</script>
+{% endblock %}
