@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule Post - SMM Agent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-plus-circle text-primary me-2"></i>Schedule New Post
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if not connected_platforms %}
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>No platforms connected!</strong> 
+                        You need to connect at least one social media account before scheduling posts.
+                        <a href="{{ url_for('social.manage_accounts') }}" class="alert-link">Connect now</a>
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" novalidate>
+                        <!-- Content -->
+                        <div class="mb-4">
+                            <label for="content" class="form-label fw-bold">
+                                <i class="fas fa-edit me-1"></i>Post Content *
+                            </label>
+                            <textarea class="form-control" id="content" name="content" rows="6" 
+                                    placeholder="What's on your mind? Share your content here..." 
+                                    required maxlength="2000"></textarea>
+                            <div class="form-text d-flex justify-content-between">
+                                <span>Be creative! Your audience is waiting.</span>
+                                <span id="char-count">0/2000</span>
+                            </div>
+                        </div>
+
+                        <!-- Platforms -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-share-alt me-1"></i>Select Platforms *
+                            </label>
+                            {% if connected_platforms %}
+                                <div class="row">
+                                    {% for platform in connected_platforms %}
+                                    <div class="col-sm-6 col-lg-4 mb-3">
+                                        <div class="form-check platform-card">
+                                            <input class="form-check-input" type="checkbox" 
+                                                   name="platforms" value="{{ platform }}" id="{{ platform }}">
+                                            <label class="form-check-label w-100" for="{{ platform }}">
+                                                <div class="platform-option p-3 border rounded">
+                                                    {% if platform == 'tiktok' %}
+                                                        <i class="fab fa-tiktok fa-2x mb-2" style="color: #ff0050;"></i>
+                                                        <h6>TikTok</h6>
+                                                    {% elif platform == 'instagram' %}
+                                                        <i class="fab fa-instagram fa-2x mb-2" style="color: #e4405f;"></i>
+                                                        <h6>Instagram</h6>
+                                                    {% elif platform == 'youtube' %}
+                                                        <i class="fab fa-youtube fa-2x mb-2" style="color: #ff0000;"></i>
+                                                        <h6>YouTube</h6>
+                                                    {% endif %}
+                                                    <small class="text-success">Connected</small>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4 border rounded bg-light">
+                                    <i class="fas fa-unlink fa-3x text-muted mb-3"></i>
+                                    <p class="text-muted">No platforms connected</p>
+                                    <a href="{{ url_for('social.manage_accounts') }}" class="btn btn-primary">
+                                        <i class="fas fa-link me-2"></i>Connect Platforms
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Hashtags -->
+                        <div class="mb-4">
+                            <label for="hashtags" class="form-label fw-bold">
+                                <i class="fas fa-hashtag me-1"></i>Hashtags (Optional)
+                            </label>
+                            <input type="text" class="form-control" id="hashtags" name="hashtags" 
+                                   placeholder="#viral #trending #awesome">
+                            <div class="form-text">Separate hashtags with spaces. Don't forget the # symbol!</div>
+                        </div>
+
+                        <!-- Scheduling Options -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-clock me-1"></i>When to Post
+                            </label>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="schedule_type" 
+                                               value="now" id="schedule_now" checked>
+                                        <label class="form-check-label" for="schedule_now">
+                                            <i class="fas fa-bolt text-warning me-2"></i>
+                                            <strong>Post Now</strong>
+                                            <br><small class="text-muted">Post immediately (within 1 minute)</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="schedule_type" 
+                                               value="custom" id="schedule_custom">
+                                        <label class="form-check-label" for="schedule_custom">
+                                            <i class="fas fa-calendar-alt text-info me-2"></i>
+                                            <strong>Schedule for Later</strong>
+                                            <br><small class="text-muted">Choose specific date and time</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Custom scheduling fields -->
+                            <div id="custom-schedule" class="mt-3" style="display: none;">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="schedule_date" class="form-label">Date</label>
+                                        <input type="date" class="form-control" id="schedule_date" name="schedule_date">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="schedule_time" class="form-label">Time</label>
+                                        <input type="time" class="form-control" id="schedule_time" name="schedule_time">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex gap-3 justify-content-end">
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary" {% if not connected_platforms %}disabled{% endif %}>
+                                <i class="fas fa-paper-plane me-2"></i>Schedule Post
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb text-warning me-2"></i>Pro Tips</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Use engaging questions to boost interaction
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Add relevant hashtags for better reach
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Post during peak hours for your audience
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Keep content authentic and valuable
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Character counter
+document.getElementById('content').addEventListener('input', function() {
+    const count = this.value.length;
+    document.getElementById('char-count').textContent = count + '/2000';
+    
+    if (count > 1800) {
+        document.getElementById('char-count').classList.add('text-warning');
+    } else {
+        document.getElementById('char-count').classList.remove('text-warning');
+    }
+});
+
+// Schedule type toggle
+document.querySelectorAll('input[name="schedule_type"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const customSchedule = document.getElementById('custom-schedule');
+        if (this.value === 'custom') {
+            customSchedule.style.display = 'block';
+            // Set default date to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('schedule_date').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('schedule_time').value = '09:00';
+        } else {
+            customSchedule.style.display = 'none';
+        }
+    });
+});
+
+// Platform selection styling
+document.querySelectorAll('input[name="platforms"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        const platformOption = this.nextElementSibling.querySelector('.platform-option');
+        if (this.checked) {
+            platformOption.classList.add('border-primary', 'bg-primary', 'bg-opacity-10');
+        } else {
+            platformOption.classList.remove('border-primary', 'bg-primary', 'bg-opacity-10');
+        }
+    });
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const content = document.getElementById('content').value.trim();
+    const platforms = document.querySelectorAll('input[name="platforms"]:checked');
+    const scheduleType = document.querySelector('input[name="schedule_type"]:checked').value;
+    
+    if (!content) {
+        e.preventDefault();
+        showAlert('Please enter post content', 'danger');
+        return false;
+    }
+    
+    if (platforms.length === 0) {
+        e.preventDefault();
+        showAlert('Please select at least one platform', 'danger');
+        return false;
+    }
+    
+    if (scheduleType === 'custom') {
+        const date = document.getElementById('schedule_date').value;
+        const time = document.getElementById('schedule_time').value;
+        
+        if (!date || !time) {
+            e.preventDefault();
+            showAlert('Please select both date and time for custom scheduling', 'danger');
+            return false;
+        }
+        
+        // Check if scheduled time is in the future
+        const scheduledDateTime = new Date(date + 'T' + time);
+        if (scheduledDateTime <= new Date()) {
+            e.preventDefault();
+            showAlert('Scheduled time must be in the future', 'danger');
+            return false;
+        }
+    }
+});
+
+// Auto-focus content textarea
+document.getElementById('content').focus();
+</script>
+{% endblock %}
