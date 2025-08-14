@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}SMM Automation Agent - Automate Your Social Media{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row min-vh-100 align-items-center">
+        <div class="col-lg-6">
+            <div class="hero-content">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-robot text-primary"></i>
+                    Automate Your Social Media
+                </h1>
+                <p class="lead mb-4">
+                    Connect your TikTok, Instagram, and YouTube accounts and let our AI agent handle your daily posting schedule. 
+                    Upload content in bulk, schedule posts, and grow your audience while you sleep.
+                </p>
+                
+                <div class="d-flex flex-column flex-sm-row gap-3 mb-5">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-rocket me-2"></i>Get Started Free
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                </div>
+                
+                <!-- Feature Highlights -->
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-link text-success me-3 fs-4"></i>
+                            <span>One-Click OAuth Connect</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-upload text-info me-3 fs-4"></i>
+                            <span>Bulk CSV Upload</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock text-warning me-3 fs-4"></i>
+                            <span>Smart Scheduling</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-mobile-alt text-primary me-3 fs-4"></i>
+                            <span>Mobile Optimized</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="hero-image text-center">
+                <!-- SVG Illustration -->
+                <svg viewBox="0 0 500 400" class="img-fluid" style="max-width: 400px;">
+                    <!-- Social Media Icons -->
+                    <circle cx="150" cy="100" r="40" fill="var(--bs-primary)" opacity="0.8"/>
+                    <text x="150" y="110" text-anchor="middle" fill="white" font-size="24">📱</text>
+                    
+                    <circle cx="350" cy="100" r="40" fill="var(--bs-success)" opacity="0.8"/>
+                    <text x="350" y="110" text-anchor="middle" fill="white" font-size="24">📸</text>
+                    
+                    <circle cx="250" cy="200" r="40" fill="var(--bs-danger)" opacity="0.8"/>
+                    <text x="250" y="210" text-anchor="middle" fill="white" font-size="24">📺</text>
+                    
+                    <!-- Robot/Agent -->
+                    <circle cx="250" cy="320" r="50" fill="var(--bs-info)"/>
+                    <text x="250" y="330" text-anchor="middle" fill="white" font-size="32">🤖</text>
+                    
+                    <!-- Connection Lines -->
+                    <line x1="190" y1="130" x2="220" y2="290" stroke="var(--bs-secondary)" stroke-width="2" stroke-dasharray="5,5" opacity="0.6"/>
+                    <line x1="310" y1="130" x2="280" y2="290" stroke="var(--bs-secondary)" stroke-width="2" stroke-dasharray="5,5" opacity="0.6"/>
+                    <line x1="250" y1="240" x2="250" y2="270" stroke="var(--bs-secondary)" stroke-width="2" stroke-dasharray="5,5" opacity="0.6"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Features Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="display-5 fw-bold">Why Choose SMM Agent?</h2>
+            <p class="lead text-muted">Designed specifically for mobile users and Render deployment</p>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark border-secondary">
+                <div class="card-body text-center">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Secure OAuth</h5>
+                    <p class="card-text">Connect your accounts securely without exposing API keys. Our OAuth implementation follows industry best practices.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark border-secondary">
+                <div class="card-body text-center">
+                    <i class="fas fa-wifi fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Offline Ready</h5>
+                    <p class="card-text">Prepare your content offline and sync when connected. Perfect for mobile users with unreliable connections.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 bg-dark border-secondary">
+                <div class="card-body text-center">
+                    <i class="fas fa-rocket fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Simple Deployment</h5>
+                    <p class="card-text">Deploy to Render with just build and start commands. No complex configuration required.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Platforms Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h3 class="fw-bold">Supported Platforms</h3>
+        </div>
+        
+        <div class="col-md-4 text-center mb-3">
+            <div class="platform-card p-4 border border-secondary rounded">
+                <i class="fab fa-tiktok fa-4x mb-3" style="color: #ff0050;"></i>
+                <h5>TikTok</h5>
+                <p class="text-muted">Schedule your TikTok content and reach millions</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4 text-center mb-3">
+            <div class="platform-card p-4 border border-secondary rounded">
+                <i class="fab fa-instagram fa-4x mb-3" style="color: #e4405f;"></i>
+                <h5>Instagram</h5>
+                <p class="text-muted">Automate your Instagram posts and stories</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4 text-center mb-3">
+            <div class="platform-card p-4 border border-secondary rounded">
+                <i class="fab fa-youtube fa-4x mb-3" style="color: #ff0000;"></i>
+                <h5>YouTube</h5>
+                <p class="text-muted">Manage your YouTube community posts</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Install PWA prompt
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    // Show install button
+    const installBtn = document.createElement('button');
+    installBtn.className = 'btn btn-outline-primary position-fixed bottom-0 end-0 m-3';
+    installBtn.innerHTML = '<i class="fas fa-download me-2"></i>Install App';
+    installBtn.onclick = () => {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            }
+            deferredPrompt = null;
+            installBtn.remove();
+        });
+    };
+    document.body.appendChild(installBtn);
+});
+</script>
+{% endblock %}
