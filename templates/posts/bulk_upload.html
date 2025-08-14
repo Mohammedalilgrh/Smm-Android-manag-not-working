@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block title %}Bulk Upload - SMM Agent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-upload text-success me-2"></i>Bulk Upload Posts
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Upload multiple posts at once!</strong> 
+                        Use our CSV template to schedule hundreds of posts with just one upload.
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        <!-- File Upload -->
+                        <div class="mb-4">
+                            <label for="file" class="form-label fw-bold">
+                                <i class="fas fa-file-csv me-1"></i>CSV File *
+                            </label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="file" name="file" 
+                                       accept=".csv" required>
+                                <a href="{{ url_for('main.download_template') }}" 
+                                   class="btn btn-outline-secondary" download>
+                                    <i class="fas fa-download me-1"></i>Template
+                                </a>
+                            </div>
+                            <div class="form-text">
+                                Upload a CSV file with your posts. 
+                                <a href="{{ url_for('main.download_template') }}" class="text-primary">Download template</a> 
+                                to get started.
+                            </div>
+                        </div>
+
+                        <!-- Upload Type -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-calendar-alt me-1"></i>Scheduling Type
+                            </label>
+                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="upload_type" 
+                                               value="daily" id="type_daily" checked>
+                                        <label class="form-check-label w-100" for="type_daily">
+                                            <div class="upload-type-card p-3 border rounded">
+                                                <i class="fas fa-calendar-day fa-2x text-primary mb-2"></i>
+                                                <h6>Daily Schedule</h6>
+                                                <small class="text-muted">One post per day starting from selected date</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="upload_type" 
+                                               value="immediate" id="type_immediate">
+                                        <label class="form-check-label w-100" for="type_immediate">
+                                            <div class="upload-type-card p-3 border rounded">
+                                                <i class="fas fa-bolt fa-2x text-warning mb-2"></i>
+                                                <h6>Immediate</h6>
+                                                <small class="text-muted">Post all content within next few minutes</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="upload_type" 
+                                               value="custom" id="type_custom">
+                                        <label class="form-check-label w-100" for="type_custom">
+                                            <div class="upload-type-card p-3 border rounded">
+                                                <i class="fas fa-cog fa-2x text-info mb-2"></i>
+                                                <h6>Custom</h6>
+                                                <small class="text-muted">Hourly distribution (advanced)</small>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Start Date -->
+                        <div class="mb-4" id="start-date-section">
+                            <label for="start_date" class="form-label fw-bold">
+                                <i class="fas fa-calendar-plus me-1"></i>Start Date
+                            </label>
+                            <input type="date" class="form-control" id="start_date" name="start_date">
+                            <div class="form-text">When should the first post be published?</div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex gap-3 justify-content-end">
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-upload me-2"></i>Upload & Schedule
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- CSV Format Guide -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-question-circle text-info me-2"></i>CSV Format Guide</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>content</code></td>
+                                    <td><span class="badge bg-danger">Yes</span></td>
+                                    <td>Your post text content</td>
+                                    <td>"Check out our amazing new product!"</td>
+                                </tr>
+                                <tr>
+                                    <td><code>platforms</code></td>
+                                    <td><span class="badge bg-secondary">No</span></td>
+                                    <td>Comma-separated platforms</td>
+                                    <td>"tiktok,instagram,youtube"</td>
+                                </tr>
+                                <tr>
+                                    <td><code>hashtags</code></td>
+                                    <td><span class="badge bg-secondary">No</span></td>
+                                    <td>Hashtags with # symbol</td>
+                                    <td>"#viral #trending #awesome"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-check-circle text-success me-1"></i>Best Practices</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-angle-right text-muted me-2"></i>Keep content engaging and authentic</li>
+                                <li><i class="fas fa-angle-right text-muted me-2"></i>Use relevant hashtags for better reach</li>
+                                <li><i class="fas fa-angle-right text-muted me-2"></i>Vary your content types and topics</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-exclamation-triangle text-warning me-1"></i>Important Notes</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-angle-right text-muted me-2"></i>Empty platforms = all connected platforms</li>
+                                <li><i class="fas fa-angle-right text-muted me-2"></i>Maximum file size: 5MB</li>
+                                <li><i class="fas fa-angle-right text-muted me-2"></i>Processing happens in background</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Uploads -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Bulk Uploads</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center py-3">
+                        <i class="fas fa-inbox fa-2x text-muted mb-3"></i>
+                        <p class="text-muted">Your upload history will appear here</p>
+                        <a href="{{ url_for('main.bulk_uploads') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-list me-2"></i>View Upload History
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Set default start date to tomorrow
+document.addEventListener('DOMContentLoaded', function() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('start_date').value = tomorrow.toISOString().split('T')[0];
+});
+
+// Upload type styling
+document.querySelectorAll('input[name="upload_type"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        // Reset all cards
+        document.querySelectorAll('.upload-type-card').forEach(card => {
+            card.classList.remove('border-primary', 'bg-primary', 'bg-opacity-10');
+        });
+        
+        // Highlight selected card
+        const selectedCard = this.nextElementSibling.querySelector('.upload-type-card');
+        selectedCard.classList.add('border-primary', 'bg-primary', 'bg-opacity-10');
+        
+        // Show/hide start date for immediate uploads
+        const startDateSection = document.getElementById('start-date-section');
+        if (this.value === 'immediate') {
+            startDateSection.style.display = 'none';
+        } else {
+            startDateSection.style.display = 'block';
+        }
+    });
+});
+
+// File validation
+document.getElementById('file').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        if (!file.name.toLowerCase().endsWith('.csv')) {
+            showAlert('Please select a CSV file', 'danger');
+            this.value = '';
+            return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) { // 5MB
+            showAlert('File size must be less than 5MB', 'danger');
+            this.value = '';
+            return;
+        }
+        
+        // Show file info
+        const fileInfo = document.createElement('div');
+        fileInfo.className = 'mt-2 text-success';
+        fileInfo.innerHTML = `<i class="fas fa-check-circle me-1"></i>Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        
+        // Remove existing file info
+        const existingInfo = this.parentNode.nextElementSibling.nextElementSibling;
+        if (existingInfo && existingInfo.classList.contains('text-success')) {
+            existingInfo.remove();
+        }
+        
+        this.parentNode.parentNode.insertBefore(fileInfo, this.parentNode.nextElementSibling);
+    }
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const file = document.getElementById('file').files[0];
+    const uploadType = document.querySelector('input[name="upload_type"]:checked').value;
+    const startDate = document.getElementById('start_date').value;
+    
+    if (!file) {
+        e.preventDefault();
+        showAlert('Please select a CSV file to upload', 'danger');
+        return false;
+    }
+    
+    if (uploadType !== 'immediate' && !startDate) {
+        e.preventDefault();
+        showAlert('Please select a start date', 'danger');
+        return false;
+    }
+    
+    // Show loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+    submitBtn.disabled = true;
+    
+    // Reset button after a delay (in case form submission fails)
+    setTimeout(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 10000);
+});
+
+// Drag and drop functionality
+const fileInput = document.getElementById('file');
+const dropZone = fileInput.parentNode;
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, unhighlight, false);
+});
+
+function highlight(e) {
+    dropZone.classList.add('border-primary', 'bg-primary', 'bg-opacity-10');
+}
+
+function unhighlight(e) {
+    dropZone.classList.remove('border-primary', 'bg-primary', 'bg-opacity-10');
+}
+
+dropZone.addEventListener('drop', handleDrop, false);
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    
+    if (files.length > 0) {
+        fileInput.files = files;
+        fileInput.dispatchEvent(new Event('change'));
+    }
+}
+</script>
+{% endblock %}
