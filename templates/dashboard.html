@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SMM Agent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-6 fw-bold">
+                <i class="fas fa-tachometer-alt text-primary me-2"></i>Dashboard
+            </h1>
+            <p class="lead text-muted">Welcome back, {{ current_user.username }}! Here's your SMM overview.</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-sm-6 col-lg-3 mb-3">
+            <div class="card bg-primary bg-opacity-10 border-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-primary mb-1">Total Posts</h5>
+                            <h3 class="mb-0">{{ stats.total_posts }}</h3>
+                        </div>
+                        <i class="fas fa-file-alt fa-2x text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-lg-3 mb-3">
+            <div class="card bg-warning bg-opacity-10 border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-warning mb-1">Scheduled</h5>
+                            <h3 class="mb-0">{{ stats.scheduled_posts }}</h3>
+                        </div>
+                        <i class="fas fa-clock fa-2x text-warning opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-lg-3 mb-3">
+            <div class="card bg-success bg-opacity-10 border-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-success mb-1">Posted</h5>
+                            <h3 class="mb-0">{{ stats.posted_count }}</h3>
+                        </div>
+                        <i class="fas fa-check-circle fa-2x text-success opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-lg-3 mb-3">
+            <div class="card bg-info bg-opacity-10 border-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-info mb-1">Connected</h5>
+                            <h3 class="mb-0">{{ stats.connected_platforms }}</h3>
+                        </div>
+                        <i class="fas fa-link fa-2x text-info opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="{{ url_for('main.schedule_post_route') }}" class="btn btn-primary w-100 d-flex align-items-center justify-content-center py-3">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                <span>Schedule Post</span>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="{{ url_for('main.bulk_upload') }}" class="btn btn-success w-100 d-flex align-items-center justify-content-center py-3">
+                                <i class="fas fa-upload me-2"></i>
+                                <span>Bulk Upload</span>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="{{ url_for('social.manage_accounts') }}" class="btn btn-info w-100 d-flex align-items-center justify-content-center py-3">
+                                <i class="fas fa-link me-2"></i>
+                                <span>Connect Accounts</span>
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <a href="{{ url_for('main.posts') }}" class="btn btn-secondary w-100 d-flex align-items-center justify-content-center py-3">
+                                <i class="fas fa-list me-2"></i>
+                                <span>View Posts</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Connected Platforms -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-share-alt me-2"></i>Connected Platforms</h5>
+                </div>
+                <div class="card-body">
+                    {% if stats.platforms %}
+                        {% for platform in stats.platforms %}
+                        <div class="d-flex align-items-center mb-3">
+                            {% if platform == 'tiktok' %}
+                                <i class="fab fa-tiktok fa-2x me-3" style="color: #ff0050;"></i>
+                                <div>
+                                    <h6 class="mb-0">TikTok</h6>
+                                    <small class="text-success">Connected</small>
+                                </div>
+                            {% elif platform == 'instagram' %}
+                                <i class="fab fa-instagram fa-2x me-3" style="color: #e4405f;"></i>
+                                <div>
+                                    <h6 class="mb-0">Instagram</h6>
+                                    <small class="text-success">Connected</small>
+                                </div>
+                            {% elif platform == 'youtube' %}
+                                <i class="fab fa-youtube fa-2x me-3" style="color: #ff0000;"></i>
+                                <div>
+                                    <h6 class="mb-0">YouTube</h6>
+                                    <small class="text-success">Connected</small>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-unlink fa-2x text-muted mb-3"></i>
+                            <p class="text-muted mb-3">No platforms connected yet</p>
+                            <a href="{{ url_for('social.manage_accounts') }}" class="btn btn-primary">
+                                <i class="fas fa-link me-2"></i>Connect Now
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Upcoming Posts</h5>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_posts %}
+                        {% for post in upcoming_posts %}
+                        <div class="border-bottom pb-2 mb-2">
+                            <p class="mb-1">{{ post.content[:50] }}{% if post.content|length > 50 %}...{% endif %}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-clock me-1"></i>{{ post.scheduled_for.strftime('%Y-%m-%d %H:%M') }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-calendar-times fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">No upcoming posts scheduled</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Posts</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_posts %}
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Content</th>
+                                        <th>Platforms</th>
+                                        <th>Status</th>
+                                        <th>Scheduled</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for post in recent_posts %}
+                                    <tr>
+                                        <td>
+                                            {{ post.content[:40] }}{% if post.content|length > 40 %}...{% endif %}
+                                        </td>
+                                        <td>
+                                            {% for platform in post.get_platforms() %}
+                                                <span class="badge bg-secondary me-1">{{ platform }}</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% if post.status == 'scheduled' %}
+                                                <span class="badge bg-warning">Scheduled</span>
+                                            {% elif post.status == 'posted' %}
+                                                <span class="badge bg-success">Posted</span>
+                                            {% elif post.status == 'failed' %}
+                                                <span class="badge bg-danger">Failed</span>
+                                            {% else %}
+                                                <span class="badge bg-info">{{ post.status.title() }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <small>{{ post.scheduled_for.strftime('%m/%d %H:%M') }}</small>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <a href="{{ url_for('main.posts') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-list me-2"></i>View All Posts
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No posts yet</h5>
+                            <p class="text-muted mb-3">Start by scheduling your first post or uploading content in bulk</p>
+                            <div class="d-flex gap-2 justify-content-center flex-wrap">
+                                <a href="{{ url_for('main.schedule_post_route') }}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>Schedule Post
+                                </a>
+                                <a href="{{ url_for('main.bulk_upload') }}" class="btn btn-success">
+                                    <i class="fas fa-upload me-2"></i>Bulk Upload
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Auto-refresh stats every 30 seconds
+setInterval(function() {
+    fetch('/api/stats')
+        .then(response => response.json())
+        .then(data => {
+            // Update stats cards
+            const statsElements = {
+                'total_posts': data.total_posts,
+                'scheduled_posts': data.scheduled_posts,
+                'posted_count': data.posted_count,
+                'connected_platforms': data.connected_platforms
+            };
+            
+            Object.keys(statsElements).forEach(key => {
+                const element = document.querySelector(`[data-stat="${key}"]`);
+                if (element) {
+                    element.textContent = statsElements[key];
+                }
+            });
+        })
+        .catch(error => console.log('Stats update failed:', error));
+}, 30000);
+</script>
+{% endblock %}
