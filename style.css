@@ -1,0 +1,235 @@
+/* SMM Agent - Custom Styles */
+/* Using minimal custom CSS, relying on Bootstrap dark theme */
+
+:root {
+    --smm-primary: #0d6efd;
+    --smm-success: #198754;
+    --smm-warning: #ffc107;
+    --smm-danger: #dc3545;
+    --smm-info: #0dcaf0;
+}
+
+/* Mobile-first responsive design */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding-top: 70px; /* Account for fixed navbar */
+}
+
+/* Loading overlay */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Offline banner */
+#offline-banner {
+    z-index: 1050;
+    margin-bottom: 20px;
+}
+
+/* Platform cards */
+.platform-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.platform-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.platform-option {
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.platform-option:hover {
+    background-color: var(--bs-gray-800);
+}
+
+/* Upload type cards */
+.upload-type-card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.upload-type-card:hover {
+    background-color: var(--bs-gray-800);
+}
+
+/* Form enhancements */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Button enhancements */
+.btn {
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+/* Card hover effects */
+.card {
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+}
+
+/* Stats cards */
+.stats-card {
+    background: linear-gradient(45deg, var(--bs-primary), var(--bs-info));
+    color: white;
+    border: none;
+}
+
+/* Hero section for landing page */
+.hero-content h1 {
+    background: linear-gradient(45deg, var(--bs-primary), var(--bs-info));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Social media brand colors */
+.text-tiktok { color: #ff0050; }
+.text-instagram { color: #e4405f; }
+.text-youtube { color: #ff0000; }
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn {
+        padding: 0.75rem 1rem;
+    }
+    
+    /* Stack platform cards on mobile */
+    .platform-card {
+        margin-bottom: 1rem;
+    }
+    
+    /* Adjust hero text for mobile */
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    /* Mobile-friendly tables */
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* PWA specific styles */
+@media (display-mode: standalone) {
+    body {
+        padding-top: 60px; /* Less padding when in PWA mode */
+    }
+    
+    .navbar {
+        background: var(--bs-dark) !important;
+    }
+}
+
+/* Dark mode enhancements */
+[data-bs-theme="dark"] {
+    --bs-body-bg: #121212;
+    --bs-body-color: #e0e0e0;
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: #1e1e1e;
+    border-color: #333;
+}
+
+[data-bs-theme="dark"] .table-dark {
+    --bs-table-bg: #1e1e1e;
+}
+
+/* Drag and drop styling */
+.border-primary.bg-primary.bg-opacity-10 {
+    border-style: dashed !important;
+    border-width: 2px !important;
+}
+
+/* Animation utilities */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Accessibility improvements */
+.btn:focus,
+.form-control:focus {
+    outline: 2px solid var(--bs-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .card {
+        border-width: 2px;
+    }
+    
+    .btn {
+        border-width: 2px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar,
+    .btn,
+    #offline-banner {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #000 !important;
+        page-break-inside: avoid;
+    }
+}
