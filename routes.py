@@ -121,6 +121,16 @@ def schedule_post_route():
     connected_platforms = current_user.get_connected_platforms()
     return render_template('posts/schedule.html', connected_platforms=connected_platforms)
 
+@main_bp.route('/terms')
+def terms():
+    """Terms of Service page"""
+    return render_template('policies/terms.html')
+
+@main_bp.route('/privacy')
+def privacy():
+    """Privacy Policy page"""
+    return render_template('policies/privacy.html')
+
 @main_bp.route('/bulk-upload', methods=['GET', 'POST'])
 @login_required
 def bulk_upload():
