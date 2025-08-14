@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Accounts - SMM Agent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-link text-info me-2"></i>Social Media Accounts
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        <strong>Secure OAuth Connection:</strong> 
+                        Your credentials are never stored. We use industry-standard OAuth 2.0 for secure authentication.
+                    </div>
+
+                    <div class="row">
+                        {% for platform in platforms %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card platform-card {% if connected_accounts[platform] %}border-success{% else %}border-secondary{% endif %}">
+                                <div class="card-body text-center">
+                                    <!-- Platform Icon -->
+                                    <div class="mb-3">
+                                        {% if platform == 'tiktok' %}
+                                            <i class="fab fa-tiktok fa-4x" style="color: #ff0050;"></i>
+                                        {% elif platform == 'instagram' %}
+                                            <i class="fab fa-instagram fa-4x" style="color: #e4405f;"></i>
+                                        {% elif platform == 'youtube' %}
+                                            <i class="fab fa-youtube fa-4x" style="color: #ff0000;"></i>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Platform Name -->
+                                    <h5 class="fw-bold">{{ platform.title() }}</h5>
+
+                                    {% if connected_accounts[platform] %}
+                                        <!-- Connected State -->
+                                        <div class="mb-3">
+                                            <span class="badge bg-success mb-2">
+                                                <i class="fas fa-check-circle me-1"></i>Connected
+                                            </span>
+                                            {% if connected_accounts[platform].platform_username %}
+                                                <p class="text-muted mb-0">
+                                                    <i class="fas fa-user me-1"></i>{{ connected_accounts[platform].platform_username }}
+                                                </p>
+                                            {% endif %}
+                                            <small class="text-muted">
+                                                Connected {{ connected_accounts[platform].connected_at.strftime('%b %d, %Y') }}
+                                            </small>
+                                        </div>
+
+                                        <!-- Connected Actions -->
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <button class="btn btn-outline-warning btn-sm" 
+                                                    onclick="refreshToken('{{ platform }}')">
+                                                <i class="fas fa-sync me-1"></i>Refresh
+                                            </button>
+                                            <button class="btn btn-outline-danger btn-sm" 
+                                                    onclick="disconnectPlatform('{{ platform }}')">
+                                                <i class="fas fa-unlink me-1"></i>Disconnect
+                                            </button>
+                                        </div>
+                                    {% else %}
+                                        <!-- Not Connected State -->
+                                        <div class="mb-3">
+                                            <span class="badge bg-secondary mb-2">
+                                                <i class="fas fa-times-circle me-1"></i>Not Connected
+                                            </span>
+                                            <p class="text-muted small">
+                                                Connect your {{ platform.title() }} account to start posting automatically
+                                            </p>
+                                        </div>
+
+                                        <!-- Connect Button -->
+                                        <a href="{{ url_for('social.connect_platform', platform=platform) }}" 
+                                           class="btn btn-primary">
+                                            <i class="fas fa-link me-2"></i>Connect {{ platform.title() }}
+                                        </a>
+                                    {% endif %}
+
+                                    <!-- Platform Features -->
+                                    <div class="mt-3 pt-3 border-top">
+                                        <small class="text-muted d-block">Features:</small>
+                                        {% if platform == 'tiktok' %}
+                                            <small class="text-muted">
+                                                <i class="fas fa-video me-1"></i>Video Posts
+                                                <i class="fas fa-hashtag mx-1"></i>Hashtags
+                                            </small>
+                                        {% elif platform == 'instagram' %}
+                                            <small class="text-muted">
+                                                <i class="fas fa-image me-1"></i>Photos
+                                                <i class="fas fa-video mx-1"></i>Videos
+                                                <i class="fas fa-hashtag mx-1"></i>Hashtags
+                                            </small>
+                                        {% elif platform == 'youtube' %}
+                                            <small class="text-muted">
+                                                <i class="fas fa-video me-1"></i>Videos
+                                                <i class="fas fa-comments mx-1"></i>Community Posts
+                                            </small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Connection Status -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Connection Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-sm-4">
+                            <div class="mb-3">
+                                <h3 class="text-primary">{{ connected_accounts.values() | selectattr('is_active', 'equalto', true) | list | length }}</h3>
+                                <small class="text-muted">Connected</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="mb-3">
+                                <h3 class="text-secondary">{{ platforms | length - (connected_accounts.values() | selectattr('is_active', 'equalto', true) | list | length) }}</h3>
+                                <small class="text-muted">Available</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="mb-3">
+                                <h3 class="text-success">{{ platforms | length }}</h3>
+                                <small class="text-muted">Total Platforms</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if connected_accounts.values() | selectattr('is_active', 'equalto', true) | list | length > 0 %}
+                        <div class="text-center">
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>Ready to Post
+                            </span>
+                            <p class="text-muted mt-2 mb-0">
+                                You can now schedule posts across your connected platforms
+                            </p>
+                        </div>
+                    {% else %}
+                        <div class="text-center">
+                            <span class="badge bg-warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i>Setup Required
+                            </span>
+                            <p class="text-muted mt-2 mb-0">
+                                Connect at least one platform to start posting
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Help & FAQ -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Help & FAQ</h5>
+                </div>
+                <div class="card-body">
+                    <div class="accordion accordion-flush" id="faqAccordion">
+                        <div class="accordion-item bg-dark border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-dark text-light border-0" type="button" 
+                                        data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    Why do I need to connect my accounts?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Connecting your accounts allows SMM Agent to post content on your behalf. 
+                                    We use secure OAuth 2.0 authentication - your passwords are never stored or accessed.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item bg-dark border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-dark text-light border-0" type="button" 
+                                        data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Is my data secure?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Yes! We follow industry best practices for security. Your access tokens are encrypted, 
+                                    and we only request the minimum permissions needed to post content.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item bg-dark border-secondary">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed bg-dark text-light border-0" type="button" 
+                                        data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Can I disconnect anytime?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Absolutely! You can disconnect any platform at any time. This will stop all future posts 
+                                    to that platform and revoke our access to your account.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>What's Next?</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <a href="{{ url_for('main.schedule_post_route') }}" class="btn btn-primary w-100">
+                                <i class="fas fa-plus-circle me-2"></i>Schedule a Post
+                            </a>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{{ url_for('main.bulk_upload') }}" class="btn btn-success w-100">
+                                <i class="fas fa-upload me-2"></i>Bulk Upload Posts
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function disconnectPlatform(platform) {
+    if (confirm(`Are you sure you want to disconnect from ${platform}? This will stop all future posts to this platform.`)) {
+        fetch(`/social/disconnect/${platform}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                showAlert(data.error || 'Failed to disconnect platform', 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Network error. Please try again.', 'danger');
+        });
+    }
+}
+
+function refreshToken(platform) {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Refreshing...';
+    btn.disabled = true;
+    
+    fetch(`/social/refresh-token/${platform}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert(data.message || 'Token refreshed successfully', 'success');
+        } else {
+            showAlert(data.error || 'Failed to refresh token', 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('Network error. Please try again.', 'danger');
+    })
+    .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+}
+
+// Check connection status periodically
+setInterval(function() {
+    // In a production app, you might want to check token expiry status
+    // and show warnings for tokens that will expire soon
+}, 300000); // Check every 5 minutes
+</script>
+{% endblock %}
