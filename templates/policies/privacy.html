@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy - SMM Agent{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">Privacy Policy</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted"><em>Last updated: {{ "now"|strftime("%B %d, %Y") }}</em></p>
+                    
+                    <h5>1. Information We Collect</h5>
+                    <p><strong>Account Information:</strong> Email address, username, and encrypted password for account creation.</p>
+                    <p><strong>Content Data:</strong> Posts, scheduling information, and content metadata you create within our service.</p>
+                    <p><strong>OAuth Tokens:</strong> Secure access tokens from connected social media platforms (we never store your social media passwords).</p>
+                    
+                    <h5>2. How We Use Your Information</h5>
+                    <ul>
+                        <li>Provide social media management services</li>
+                        <li>Execute scheduled posts on your behalf</li>
+                        <li>Maintain and improve our service</li>
+                        <li>Communicate service updates and support</li>
+                    </ul>
+                    
+                    <h5>3. Information Sharing</h5>
+                    <p>We do not sell, trade, or share your personal information with third parties except:</p>
+                    <ul>
+                        <li>With your explicit consent</li>
+                        <li>To comply with legal requirements</li>
+                        <li>To protect our rights and safety</li>
+                    </ul>
+                    
+                    <h5>4. Data Security</h5>
+                    <p>We implement industry-standard security measures including:</p>
+                    <ul>
+                        <li>Encrypted data transmission (HTTPS)</li>
+                        <li>Secure password hashing</li>
+                        <li>OAuth 2.0 for social media connections</li>
+                        <li>Regular security updates and monitoring</li>
+                    </ul>
+                    
+                    <h5>5. Social Media Integration</h5>
+                    <p>When you connect social accounts, we receive limited permissions to post content on your behalf. We only access information necessary for posting and do not read private messages or personal data.</p>
+                    
+                    <h5>6. Data Retention</h5>
+                    <p>We retain your data while your account is active. You can request account deletion at any time, which will remove all associated data within 30 days.</p>
+                    
+                    <h5>7. Cookies and Analytics</h5>
+                    <p>We use essential cookies for authentication and service functionality. We do not use tracking cookies or third-party analytics.</p>
+                    
+                    <h5>8. Your Rights</h5>
+                    <p>You have the right to:</p>
+                    <ul>
+                        <li>Access your personal data</li>
+                        <li>Correct inaccurate information</li>
+                        <li>Delete your account and data</li>
+                        <li>Disconnect social media accounts</li>
+                    </ul>
+                    
+                    <h5>9. Children's Privacy</h5>
+                    <p>Our service is not intended for users under 13 years of age. We do not knowingly collect information from children under 13.</p>
+                    
+                    <h5>10. Policy Updates</h5>
+                    <p>We may update this privacy policy to reflect service changes or legal requirements. We will notify users of significant changes.</p>
+                    
+                    <h5>11. Contact Us</h5>
+                    <p>For privacy-related questions or requests, please contact us through our support channels.</p>
+                    
+                    <div class="text-center mt-4">
+                        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
