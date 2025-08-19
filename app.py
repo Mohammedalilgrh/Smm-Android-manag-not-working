@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv("api.env")  # This will load your environment variables
 import os
 import logging
 from flask import Flask, request, jsonify
