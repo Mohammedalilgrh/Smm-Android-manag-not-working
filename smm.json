@@ -1,0 +1,87 @@
+{
+  "name": "Auto Upload to YouTube, Instagram, TikTok",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "/path/to/your/video/folder",
+        "watchForNew": true
+      },
+      "name": "Folder Trigger",
+      "type": "n8n-nodes-base.watch",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{$node[\"Folder Trigger\"].json[\"fileName\"]}}",
+        "description": "Automated upload from n8n workflow",
+        "privacyStatus": "public",
+        "binaryData": "data"
+      },
+      "name": "YouTube Upload",
+      "type": "n8n-nodes-base.youtube",
+      "typeVersion": 1,
+      "position": [600, 200],
+      "credentials": {
+        "youtubeOAuth2Api": "YOUR_YOUTUBE_OAUTH"
+      }
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "publish",
+        "caption": "={{$node[\"Folder Trigger\"].json[\"fileName\"]}}",
+        "binaryProperty": "data"
+      },
+      "name": "Instagram Upload",
+      "type": "n8n-nodes-base.instagramGraphApi",
+      "typeVersion": 1,
+      "position": [600, 400],
+      "credentials": {
+        "instagramGraphApi": "YOUR_INSTAGRAM_OAUTH"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "title": "={{$node[\"Folder Trigger\"].json[\"fileName\"]}}",
+        "description": "Automated upload via n8n",
+        "binaryProperty": "data"
+      },
+      "name": "TikTok Upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [600, 600],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "channel": "YOUR_TELEGRAM_CHANNEL",
+        "text": "Video uploaded to YouTube, Instagram, and TikTok: {{$node[\"Folder Trigger\"].json[\"fileName\"]}}"
+      },
+      "name": "Telegram Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [900, 400],
+      "credentials": {
+        "telegramApi": "YOUR_TELEGRAM_API"
+      }
+    }
+  ],
+  "connections": {
+    "Folder Trigger": {
+      "main": [
+        [
+          { "node": "YouTube Upload", "type": "main", "index": 0 },
+          { "node": "Instagram Upload", "type": "main", "index": 0 },
+          { "node": "TikTok Upload", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "YouTube Upload": { "main": [[{"node": "Telegram Notification", "type": "main", "index": 0}]] },
+    "Instagram Upload": { "main": [[{"node": "Telegram Notification", "type": "main", "index": 0}]] },
+    "TikTok Upload": { "main": [[{"node": "Telegram Notification", "type": "main", "index": 0}]] }
+  }
+}
